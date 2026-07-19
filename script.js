@@ -1,9 +1,4 @@
-/* ============================================================
-   PORTFOLIO — Iván Rojas Robles
-   Three.js + GSAP + ScrollTrigger
-   ============================================================ */
 
-// ── PROYECTOS DE IVÁN (edita aquí para agregar más) ──────────
 const projects = [
   {
     id: "01",
@@ -106,10 +101,12 @@ const projects = [
   },
 ];
 
-/* ============================================================
-   THREE.JS — FONDO DE PARTÍCULAS
-   ============================================================ */
 (function initThree() {
+  if (typeof THREE === 'undefined') {
+    console.warn('Three.js no se cargó; se omite el fondo animado.');
+    return;
+  }
+  try {
   const canvas   = document.getElementById('bg-canvas');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -187,6 +184,9 @@ const projects = [
     camera.position.y = -scrollY * 0.0009;
     renderer.render(scene, camera);
   })();
+  } catch (err) {
+    console.warn('No se pudo inicializar el fondo 3D:', err);
+  }
 })();
 
 /* ============================================================
@@ -296,9 +296,18 @@ modalClose.addEventListener('click', closeModal);
 overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-/* ============================================================
-   GSAP — ANIMACIONES
-   ============================================================ */
+if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+  console.warn('GSAP/ScrollTrigger no se cargaron; se muestra el contenido sin animaciones.');
+  document.querySelectorAll(
+    '.hero-sub, .hero-title .line, .hero-desc, .hero-actions, .reveal, ' +
+    '.about-text, .about-right, .section-label, .section-title, ' +
+    '.contact-section .section-title, .contact-sub, .contact-link'
+  ).forEach(el => {
+    el.style.opacity = '1';
+    el.style.transform = 'none';
+  });
+} else {
+try {
 gsap.registerPlugin(ScrollTrigger);
 
 // Hero
@@ -366,7 +375,70 @@ gsap.from('.contact-section .section-title, .contact-sub, .contact-link', {
   scrollTrigger: { trigger: '.contact-section', start: 'top 80%' }
 });
 
-// Navbar scroll
+} catch (err) {
+  console.warn('Error al ejecutar las animaciones GSAP; se muestra el contenido sin animar:', err);
+  document.querySelectorAll(
+    '.hero-sub, .hero-title .line, .hero-desc, .hero-actions, .reveal, ' +
+    '.about-text, .about-right, .section-label, .section-title, ' +
+    '.contact-section .section-title, .contact-sub, .contact-link'
+  ).forEach(el => {
+    el.style.opacity = '1';
+    el.style.transform = 'none';
+  });
+}
+} 
+
+
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+(function initNavMenu() {
+  const toggle   = document.getElementById('nav-toggle');
+  const navLinks = document.getElementById('nav-links');
+  if (!toggle || !navLinks) return;
+
+  function closeMenu() {
+    navLinks.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+  function openMenu() {
+    navLinks.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
+  }
+
+  toggle.addEventListener('click', () => {
+    navLinks.classList.contains('open') ? closeMenu() : openMenu();
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+  const links    = Array.from(navLinks.querySelectorAll('.nav-link'));
+  const sections = links
+    .map(a => document.getElementById(a.dataset.section))
+    .filter(Boolean);
+
+  if ('IntersectionObserver' in window && sections.length) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(a => a.classList.toggle('active', a.dataset.section === entry.target.id));
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+
+    sections.forEach(sec => observer.observe(sec));
+  }
+})();
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.hero-sub, .hero-title .line, .hero-desc, .hero-actions')
+      .forEach(el => {
+        if (getComputedStyle(el).opacity === '0') {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        }
+      });
+  }, 4000);
 });
