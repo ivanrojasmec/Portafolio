@@ -21,17 +21,20 @@
       <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
       <span class="logo-fallback">IR<span class="accent">.</span></span>
     </a>
-    <ul class="nav-links">
-      <li><a href="#hero">Inicio</a></li>
-      <li><a href="#about">Perfil</a></li>
-      <li><a href="#projects">Proyectos</a></li>
-      <li><a href="#cabin">Cabina</a></li>
-      <li><a href="#contact">Contacto</a></li>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#hero" class="nav-link" data-section="hero">Inicio</a></li>
+      <li><a href="#about" class="nav-link" data-section="about">Perfil</a></li>
+      <li><a href="#projects" class="nav-link" data-section="projects">Proyectos</a></li>
+      <li><a href="#cabin" class="nav-link" data-section="cabin">Cabina</a></li>
+      <li><a href="#contact" class="nav-link" data-section="contact">Contacto</a></li>
     </ul>
     <div class="nav-status">
       <div class="badge-ring"></div>
       <span>Disponible</span>
     </div>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
   <!-- HERO -->
@@ -117,7 +120,7 @@
           <span class="stat-label">Investigaciones</span>
         </div>
         <div class="stat-item reveal">
-          <span class="stat-num" data-target="3">3</span>
+          <span class="stat-num" data-target="4">4</span>
           <span class="stat-label">Semestres</span>
         </div>
       </div>
@@ -134,6 +137,7 @@
       <h2 class="section-title">Trabajemos juntos<span class="accent">.</span></h2>
       <p class="contact-sub">¿Tienes un proyecto de automatización, electrónica o desarrollo? Hablemos.</p>
       <a href="mailto:ivan.rojas@iberopuebla.mx" class="contact-link">ivan.rojas@iberopuebla.mx →</a>
+      <a href="mailto:ivan.rojas@iberopuebla.mx" class="contact-link">ivan.rojas.mec@gmail.com →</a>
     </div>
   </section>
 
